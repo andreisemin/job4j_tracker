@@ -36,7 +36,6 @@ public class Tracker {
                 result.add(item);
             }
         }
-        result = List.copyOf(result);
         return result;
     }
 
