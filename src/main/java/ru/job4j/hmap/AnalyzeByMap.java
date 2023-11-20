@@ -78,23 +78,14 @@ public class AnalyzeByMap {
         for (Pupil pupil : pupils) {
             for (Subject subject : pupil.subjects()) {
                 String subjectName = subject.name();
-                int score = subject.score();
-                if (subjectScores.containsKey(subjectName)) {
-                    subjectScores.put(subjectName, subjectScores.get(subjectName) + score);
-                } else {
-                    subjectScores.put(subjectName, score);
-                }
+                subjectScores.put(subjectName, subjectScores.getOrDefault(subjectName, 0) + subject.score());
             }
         }
-        Label bestSubject = null;
-        int highestScore = 0;
+        List<Label> lists = new ArrayList<>();
         for (String subject : subjectScores.keySet()) {
-            int score = subjectScores.get(subject);
-            if (score > highestScore) {
-                highestScore = score;
-                bestSubject = new Label(subject, score);
-            }
+            lists.add(new Label(subject, subjectScores.get(subject)));
         }
-        return bestSubject;
+        lists.sort(Comparator.naturalOrder());
+        return lists.get(lists.size() - 1);
     }
 }
