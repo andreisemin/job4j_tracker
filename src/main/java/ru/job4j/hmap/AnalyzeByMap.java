@@ -34,7 +34,7 @@ public class AnalyzeByMap {
         for (Pupil pupil : pupils) {
             for (Subject subject : pupil.subjects()) {
                 String subjectName = subject.name();
-                subjectScores.put(subjectName, subjectScores.getOrDefault(subjectName, 0) + subject.score());
+                subjectScores.merge(subjectName, subject.score(), Integer::sum);
             }
         }
         List<Label> averageScores = new ArrayList<>();
@@ -65,7 +65,7 @@ public class AnalyzeByMap {
         for (Pupil pupil : pupils) {
             for (Subject subject : pupil.subjects()) {
                 String subjectName = subject.name();
-                subjectScores.put(subjectName, subjectScores.getOrDefault(subjectName, 0) + subject.score());
+                subjectScores.merge(subjectName, subject.score(), Integer::sum);
             }
         }
         List<Label> lists = new ArrayList<>();
