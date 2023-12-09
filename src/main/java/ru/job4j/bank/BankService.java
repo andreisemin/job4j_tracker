@@ -1,18 +1,17 @@
 package ru.job4j.bank;
 
-import ru.job4j.bank.Account;
-import ru.job4j.bank.User;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 /**
  * Класс описывает работу банковского сервиса:
  * - добавление пользователя
  * - удаление пользователя
  * - добавление банковского счета пользователю
  * - перевод средств с одного счета на другой
+ *
  * @author Andrei Semin
  * @version 1.0
  */
@@ -27,6 +26,7 @@ public class BankService {
     /**
      * Добавление нового пользователя в систему,
      * если пользователь уже существует, не выполняет никаких действий
+     *
      * @param user объект класса User
      */
     public void addUser(User user) {
@@ -36,6 +36,7 @@ public class BankService {
     /**
      * Удаляет пользователя из системы по его паспортным данным,
      * если пользователя не существует, не выполняет никаких действий
+     *
      * @param passport номер паспорта пользователя
      */
     public void deleteUser(String passport) {
@@ -46,8 +47,9 @@ public class BankService {
     /**
      * Добавляет новый счет пользователю,
      * если счет уже существует у пользователя, не выполняет никаких действий
+     *
      * @param passport номер паспорта пользователя
-     * @param account объект класса Account
+     * @param account  объект класса Account
      */
     public void addAccount(String passport, Account account) {
         User user = findByPassport(passport);
@@ -63,35 +65,35 @@ public class BankService {
      * Выполняет поиск пользователя по паспортным данным,
      * возвращает @param user объекта User, если пользователь найден,
      * иначе возвращает null
+     *
      * @param passport номер паспорта пользователя
      */
     public User findByPassport(String passport) {
-        for (User user : users.keySet()) {
-            if (user.getPassport().equals(passport)) {
-                return user;
-            }
-        }
-        return null;
+        return users.keySet()
+                .stream()
+                .filter(s -> s.getPassport().equals(passport))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
      * Выполняет поиск счета пользователя по его паспортным данным и реквизитам,
      * возвращает @param account объект класса Account, если счет найден,
      * иначе возвращает null
-     * @param passport номер паспорта пользователя
+     *
+     * @param passport  номер паспорта пользователя
      * @param requisite номер счета пользователя
      */
     public Account findByRequisite(String passport, String requisite) {
         User user = findByPassport(passport);
-        if (user != null) {
-            List<Account> accounts = getAccounts(user);
-            for (Account account : accounts) {
-                if (account.getRequisite().equals(requisite)) {
-                    return account;
-                }
-            }
+        if (user == null) {
+            return null;
         }
-        return null;
+        return getAccounts(user)
+                .stream()
+                .filter(account -> account.getRequisite().equals(requisite))
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -99,11 +101,12 @@ public class BankService {
      * возвращает true, если перевод выполнен успешно,
      * иначе, если счет не найден или не достаточно средств на счете отправителя,
      * возвращает false
-     * @param srcPassport номер паспорта отправителя
-     * @param srcRequisite номер счета отправителя
-     * @param destPassport номер паспорта получателя
+     *
+     * @param srcPassport   номер паспорта отправителя
+     * @param srcRequisite  номер счета отправителя
+     * @param destPassport  номер паспорта получателя
      * @param destRequisite номер счета получателя
-     * @param amount сумма перевода
+     * @param amount        сумма перевода
      */
     public boolean transferMoney(String srcPassport, String srcRequisite,
                                  String destPassport, String destRequisite, double amount) {
@@ -120,6 +123,7 @@ public class BankService {
     /**
      * Возвращает список счетов пользователя,
      * если пользователя нет в системе, возвращает пустой список
+     *
      * @param user объект класса User
      */
     public List<Account> getAccounts(User user) {
