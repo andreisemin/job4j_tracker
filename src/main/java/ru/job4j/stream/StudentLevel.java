@@ -9,7 +9,7 @@ public class StudentLevel {
     public static List<Student> levelOf(List<Student> students, int bound) {
         return students.stream()
                 .filter(Objects::nonNull)
-                .sorted(Comparator.comparing(Student::getScore).reversed())
+                .sorted((v1, v2) -> Integer.compare(v2.getScore(), v1.getScore()))
                 .takeWhile(st -> st.getScore() >= bound)
                 .collect(Collectors.toList());
     }
